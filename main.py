@@ -28,7 +28,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "<h1>Welcome to IntroBot!</h1>"
+    return f'<h1>Welcome to IntroBot!</h1><p>Please login from <a href="https://discord.com/oauth2/authorize?client_id={argv.cid}&redirect_uri={argv.rurl}&response_type=code&scope=identify">here</a></p>'
 @app.route("/login", methods=["GET"])
 def hello_world():
     code=request.args["code"]
@@ -44,12 +44,10 @@ def hello_world():
     res=req.json()
     token = res["access_token"]
     expire= res["expires_in"]
-    req = requests.get("https://discord.com/api/users/@me", headers={ 'Authorization': f'Bearer {token}' })
+    req = requests.get("https://discord.com/api/users/@me", headers={'Authorization': f'Bearer {token}'})
     req.raise_for_status()
     res = req.json()
     return f'<p>Hello, {res["username"]}!</p>'
-
-
 
 if __name__ == "__main__":
     app.run("0.0.0.0", port=argv.port, debug=argv.debug)
